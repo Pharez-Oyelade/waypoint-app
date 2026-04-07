@@ -49,4 +49,4 @@ UserSchema.methods.comparePassword = function (candidate: string) {
   return bcrypt.compare(candidate, this.passwordHash);
 };
 
-export default mongoose.model<IUser>("UserModel", UserSchema);
+export default mongoose.model<IUser>("User", UserSchema);
