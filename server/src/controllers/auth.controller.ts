@@ -46,3 +46,16 @@ export const loginUser = (req: any, res: any, next: any) => {
     res.json({ success: true, user });
   })(req, res, next);
 };
+
+// logout
+export const logoutUser = (_: any, res: any) => {
+  res.clearCookie("jwt");
+  res.json({ success: true });
+};
+
+// me
+export const getMe = asyncHandler(async (req: any, res: any) => {
+  const token = req.cookies?.jwt;
+  if (!token) return res.json({ user: null });
+  res.json({ user: req.user });
+});
