@@ -7,8 +7,10 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
+import { initPassport } from "./config/passport";
 
 import dns from "node:dns";
+import authRouter from "./routes/auth.routes";
 
 dotenv.config();
 
@@ -38,8 +40,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // =============== Passport ====================
+initPassport();
 
 // ================= Routes ====================
+app.use("/api/auth", authRouter);
 
 // ============ HEalth check ====================
 app.get("/health", (_, res) => res.json({ status: "ok" }));
