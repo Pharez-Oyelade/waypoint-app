@@ -62,6 +62,7 @@ const RegisterPage = () => {
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
+            type="email"
             {...register("email")}
             placeholder="you@email.com"
           />
@@ -72,7 +73,12 @@ const RegisterPage = () => {
 
         <div className="sapce-y-1">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" {...register("password")} placeholder="******" />
+          <Input
+            id="password"
+            type="password"
+            {...register("password")}
+            placeholder="******"
+          />
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password.message}</p>
           )}
