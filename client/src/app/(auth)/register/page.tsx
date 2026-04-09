@@ -91,7 +91,7 @@ const RegisterPage = () => {
 
       <a
         href={`${process.env.NEXT_PUBLIC_API}/api/auth/google`}
-        className="flex w-full items-center justify-center gap-3 border rounded-lg px-4 text-sm font-medium hover:bg-gray-50 transition"
+        className="flex w-full items-center justify-center gap-3 border rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50 transition"
       >
         <img src="/icons8-google.svg" alt="" className="h-5 w-5" />
         Continue with Google

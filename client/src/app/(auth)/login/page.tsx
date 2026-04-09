@@ -44,7 +44,7 @@ const LoginPage = () => {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900">Create account</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Log In</h1>
         <p className="mt-2 text-gray-500">Start planning your next adventure</p>
       </div>
 
@@ -82,7 +82,7 @@ const LoginPage = () => {
 
       <a
         href={`${process.env.NEXT_PUBLIC_API}/api/auth/google`}
-        className="flex w-full items-center justify-center gap-3 border rounded-lg px-4 text-sm font-medium hover:bg-gray-50 transition"
+        className="flex w-full items-center justify-center gap-3 border rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50 transition"
       >
         <img src="/icons8-google.svg" alt="" className="h-5 w-5" />
         Continue with Google
