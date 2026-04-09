@@ -93,7 +93,9 @@ const RegisterPage = () => {
 
       <p className="text-center text-sm text-gray-500">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-600 font-medium"></Link>
+        <Link href="/login" className="text-blue-600 font-medium">
+          Login
+        </Link>
       </p>
     </div>
   );
