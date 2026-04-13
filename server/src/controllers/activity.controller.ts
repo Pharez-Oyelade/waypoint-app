@@ -59,6 +59,22 @@ export const deleteActivity = asyncHandler(
   },
 );
 
+// reorder activities
+export const reorderActivities = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const { dayId } = req.params;
+    const { activityIds } = req.body;
+    await Day.findByIdAndUpdate(dayId, { activities: activityIds });
+    // Also update order field on each activity for fallback sorting
+    await Promise.all(
+      activityIds.map((id: string, index: number) =>
+        Activity.findByIdAndUpdate(id, { order: index }),
+      ),
+    );
+    res.json({ success: true });
+  },
+);
+
 // move activity
 export const moveActivity = asyncHandler(
   async (req: AuthRequest, res: Response) => {

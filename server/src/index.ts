@@ -12,6 +12,7 @@ import { initPassport } from "./config/passport";
 import dns from "node:dns";
 import authRouter from "./routes/auth.routes";
 import tripRouter from "./routes/trips.routes";
+import activityRouter from "./routes/activities.routes";
 
 dotenv.config();
 
@@ -46,6 +47,8 @@ initPassport();
 // ================= Routes ====================
 app.use("/api/auth", authRouter);
 app.use("/api/trips", tripRouter);
+app.use("/api", activityRouter);
+app.use("/api/activities", activityRouter);
 
 // ============ HEalth check ====================
 app.get("/health", (_, res) => res.json({ status: "ok" }));
