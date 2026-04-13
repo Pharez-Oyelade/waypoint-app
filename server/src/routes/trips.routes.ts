@@ -26,4 +26,6 @@ tripRouter
   .patch(validate(updateTripSchema), updateTrip)
   .delete(deleteTrip);
 
-tripRouter.post(":/id/duplicate", duplicateTrip);
+tripRouter.post("/:id/duplicate", duplicateTrip);
+
+export default tripRouter;
