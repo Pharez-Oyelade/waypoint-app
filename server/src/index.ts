@@ -55,6 +55,7 @@ app.get("/health", (_, res) => res.json({ status: "ok" }));
 
 // ================= Error Handling ==================
 app.use((err: any, req: any, res: any, next: any) => {
+  console.error(err);
   const status = err.statusCode || 500;
   res.status(status).json({
     success: false,

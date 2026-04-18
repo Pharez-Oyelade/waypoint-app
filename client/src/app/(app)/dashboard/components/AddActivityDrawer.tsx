@@ -100,13 +100,16 @@ export function AddActivityDrawer({ open, onClose, dayId, tripId }: Props) {
         lat: parseFloat(item.lat),
         lng: parseFloat(item.lon),
       },
-      address: item.address,
+      address:
+        (item.address?.tourism ||
+          item.address.neighbourhood ||
+          item.address.city) + item.address.country,
     });
     setQuery(item.display_name);
     setSuggestions([]);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (formValues: any) => {
     if (!location) {
       toast.error("Please select a location");
       return;
@@ -115,8 +118,7 @@ export function AddActivityDrawer({ open, onClose, dayId, tripId }: Props) {
     try {
       const activity = await addActivity.mutateAsync({
         dayId,
-        ...data,
-        location,
+        data: { ...formValues, location },
       });
       toast.success("Activity Added!");
       reset();
