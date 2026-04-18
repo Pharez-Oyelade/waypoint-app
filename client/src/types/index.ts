@@ -39,7 +39,7 @@ export interface Activity {
   category: string;
   estimatedCost?: number;
   actualCost?: number;
-  currerncy: string;
+  currency: string;
   status: string;
   aiGenerated: boolean;
   conflicts: { type: string; message: string; severity: string }[];
