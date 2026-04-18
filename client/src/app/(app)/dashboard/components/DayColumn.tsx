@@ -10,6 +10,7 @@ import { Plus } from "lucide-react";
 import { ActivityCard } from "./ActivityCard";
 // Add activity drawer
 import { Day } from "@/types";
+import { AddActivityDrawer } from "./AddActivityDrawer";
 
 interface Props {
   day: Day;
@@ -71,6 +72,12 @@ export function DayColumn({ day, tripId, onDeleteActivity }: Props) {
       </button>
 
       {/* Add activity drawer */}
+      <AddActivityDrawer
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        dayId={day._id}
+        tripId={tripId}
+      />
     </div>
   );
 }
