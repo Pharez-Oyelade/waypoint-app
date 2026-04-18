@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { TripCard } from "./components/TripCard";
 // create tripModal
 import { useTrips } from "@/hooks/useTrips";
+import { CreateTripModal } from "./components/CreateTripModal";
 
 const STATUS_FILTERS = [
   "all",
@@ -75,6 +76,7 @@ export default function DashboardPage() {
       )}
 
       {/* create trip modal */}
+      <CreateTripModal open={createOpen} onClose={() => setCreateOpen(false)} />
     </div>
   );
 }

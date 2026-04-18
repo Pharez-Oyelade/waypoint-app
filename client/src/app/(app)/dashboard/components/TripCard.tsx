@@ -59,7 +59,7 @@ export function TripCard({ trip }: { trip: Trip }) {
             <Calendar className="h-3.5 w-3.5" />
             <span>
               {format(new Date(trip.startDate), "MMM d")} -{" "}
-              {format(new Date(trip.endDate), "MM d")}
+              {format(new Date(trip.endDate), "MMM d")}
             </span>
           </div>
           <span className="font-medium text-gray-700">{nights}n</span>

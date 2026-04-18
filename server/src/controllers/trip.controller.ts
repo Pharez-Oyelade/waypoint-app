@@ -35,6 +35,7 @@ export const getTrips = asyncHandler(
 // create trip
 export const createTrip = asyncHandler(
   async (req: AuthRequest, res: Response) => {
+    console.log("body:", req.body);
     const trip = await Trip.create({
       ...req.body,
       owner: req.user._id,
@@ -46,6 +47,8 @@ export const createTrip = asyncHandler(
       new Date(req.body.startDate),
       new Date(req.body.endDate),
     );
+
+    res.status(201).json({ trip });
   },
 );
 
