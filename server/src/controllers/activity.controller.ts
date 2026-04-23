@@ -1,9 +1,9 @@
 import { Response } from "express";
-import { AuthRequest } from "@/middleware/auth";
-import { asyncHandler } from "@/utils/asyncHandler";
-import { AppError } from "@/utils/AppError";
-import Activity from "@/models/activityModel";
-import Day from "@/models/dayModel";
+import { AuthRequest } from "../middleware/auth";
+import { asyncHandler } from "../utils/asyncHandler";
+import { AppError } from "../utils/AppError";
+import Activity from "../models/activityModel";
+import Day from "../models/dayModel";
 
 // ADD ACTIVITY /:tripId/days/:dayId/activities
 export const addActivity = asyncHandler(

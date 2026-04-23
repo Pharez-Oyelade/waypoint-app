@@ -1,13 +1,13 @@
 import { Router } from "express";
 import passport from "passport";
-import { protect, sendTokenCookie } from "@/middleware/auth";
+import { protect, sendTokenCookie } from "../middleware/auth";
 import rateLimit from "express-rate-limit";
 import {
   getMe,
   loginUser,
   logoutUser,
   registerUser,
-} from "@/controllers/auth.controller";
+} from "../controllers/auth.controller";
 
 const authRouter = Router();
 

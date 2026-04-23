@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { protect } from "@/middleware/auth";
-import { validate } from "@/middleware/validate";
-import { createTripSchema, updateTripSchema } from "@/schemas/trip.schema";
+import { protect } from "../middleware/auth";
+import { validate } from "../middleware/validate";
+import { createTripSchema, updateTripSchema } from "../schemas/trip.schema";
 import {
   createTrip,
   deleteTrip,
@@ -9,7 +9,7 @@ import {
   getTripById,
   getTrips,
   updateTrip,
-} from "@/controllers/trip.controller";
+} from "../controllers/trip.controller";
 
 const tripRouter = Router();
 

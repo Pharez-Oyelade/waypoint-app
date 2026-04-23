@@ -1,9 +1,9 @@
 import passport from "passport";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import User from "@/models/userModel";
-import { sendTokenCookie } from "@/middleware/auth";
-import { asyncHandler } from "@/utils/asyncHandler";
+import User from "../models/userModel";
+import { sendTokenCookie } from "../middleware/auth";
+import { asyncHandler } from "../utils/asyncHandler";
 
 // Register
 export const registerUser = asyncHandler(async (req: any, res: any) => {

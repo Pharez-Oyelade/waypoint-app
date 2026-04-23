@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { protect } from "@/middleware/auth";
+import { protect } from "../middleware/auth";
 import {
   addActivity,
   deleteActivity,
   moveActivity,
   reorderActivities,
   updateActivity,
-} from "@/controllers/activity.controller";
+} from "../controllers/activity.controller";
 
 const activityRouter = Router();
 activityRouter.use(protect);

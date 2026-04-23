@@ -1,10 +1,10 @@
 import { Response } from "express";
 import { differenceInCalendarDays, addDays, startOfDay } from "date-fns";
-import { AuthRequest } from "@/middleware/auth";
-import Trip from "@/models/tripModel";
-import Day from "@/models/dayModel";
-import { asyncHandler } from "@/utils/asyncHandler";
-import { AppError } from "@/utils/AppError";
+import { AuthRequest } from "../middleware/auth";
+import Trip from "../models/tripModel";
+import Day from "../models/dayModel";
+import { asyncHandler } from "../utils/asyncHandler";
+import { AppError } from "../utils/AppError";
 import { object } from "zod";
 
 // create day documents for every day in the trip
