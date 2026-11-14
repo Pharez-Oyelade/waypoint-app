@@ -30,10 +30,10 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
     user.emailVerified = true;
     await user.save();
     sendTokenCookie(res, user.id);
-    return res.status(201).json({ sucess: true, user });
+    return res.status(201).json({ success: true, user });
   }
 
-  res.status(201).json({ sucess: true, message: "Check your email to verify" });
+  res.status(201).json({ success: true, message: "Check your email to verify" });
 });
 
 // Login

@@ -1,10 +1,8 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-// import { Loader } from "@googlemaps/js-api-loader";
-// import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -17,9 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateTrip } from "@/hooks/useTrips";
 import { useRouter } from "next/navigation";
-// import { Library } from "lucide-react";
-
-// const google = (window as any).google;
 
 const schema = z
   .object({
@@ -29,7 +24,7 @@ const schema = z
     tripType: z.enum(["solo", "couple", "group", "family"]),
   })
   .refine((d) => new Date(d.endDate) > new Date(d.startDate), {
-    message: "End date must ne after start date",
+    message: "End date must be after start date",
     path: ["endDate"],
   });
 
@@ -41,8 +36,13 @@ export function CreateTripModal({
   onClose: () => void;
 }) {
   const router = useRouter();
-  const autocompleteRef = useRef<HTMLInputElement>(null);
-  const [destination, setDestination] = useState<any>(null);
+  const [destination, setDestination] = useState<{
+    name: string;
+    placeId: string | number;
+    coordinates: { lat: number; lng: number };
+    country?: string;
+    city?: string;
+  } | null>(null);
   const createTrip = useCreateTrip();
 
   const {
@@ -55,52 +55,24 @@ export function CreateTripModal({
     defaultValues: { tripType: "solo" },
   });
 
-  // Load google places autocomplete
-  // useEffect(() => {
-  //   if (!open) return;
-
-  //   const timer = setTimeout(() => {
-  //     if (!autocompleteRef.current) return;
-
-  //     setOptions({
-  //       key: process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY!,
-  //     });
-
-  //     importLibrary("places").then((places) => {
-  //       const { Autocomplete } = places as any;
-
-  //       if (!autocompleteRef.current) return;
-
-  //       const autocomplete = new Autocomplete(autocompleteRef.current, {
-  //         types: ["(cities)"],
-  //       });
-
-  //       autocomplete.addListener("place_changed", () => {
-  //         const place = autocomplete.getPlace();
-  //         setDestination({
-  //           name: place.formatted_address || place.name,
-  //           placeId: place.place_id,
-  //           coordinates: {
-  //             lat: place.geometry?.location?.lat?.() ?? null,
-  //             lng: place.geometry?.location?.lng?.() ?? null,
-  //           },
-  //           country: place.address_components?.find((c) =>
-  //             c.types.includes("country"),
-  //           )?.long_name,
-  //           city: place.address_components?.find((c) =>
-  //             c.types.includes("locality"),
-  //           )?.long_name,
-  //         });
-  //       });
-  //     });
-  //   }, 100);
-
-  //   return () => clearTimeout(timer);
-  // }, [open]);
-
   const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<any[]>([]);
-  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const [suggestions, setSuggestions] = useState<
+    {
+      place_id: string;
+      display_name: string;
+      lat: string;
+      lon: string;
+      address?: {
+        country?: string;
+        city?: string;
+        town?: string;
+        village?: string;
+      };
+    }[]
+  >([]);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   const handleSearch = (value: string) => {
     setQuery(value);
@@ -112,15 +84,20 @@ export function CreateTripModal({
     }
 
     debounceRef.current = setTimeout(async () => {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&addressdetails=1&limit=5&featuretype=city`,
-      );
-      const data = await res.json();
-      setSuggestions(data);
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&addressdetails=1&limit=5&featuretype=city`,
+        );
+        const data = await res.json();
+        setSuggestions(data);
+      } catch {
+        // Silently fail — user can retry
+        setSuggestions([]);
+      }
     }, 400);
   };
 
-  const handleSelect = (item: any) => {
+  const handleSelect = (item: (typeof suggestions)[number]) => {
     setDestination({
       name: item.display_name,
       placeId: item.place_id,
@@ -135,7 +112,7 @@ export function CreateTripModal({
     setSuggestions([]);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: z.infer<typeof schema>) => {
     if (!destination) {
       toast.error("Please select a destination");
       return;
@@ -145,6 +122,8 @@ export function CreateTripModal({
       const trip = await createTrip.mutateAsync({ ...data, destination });
       toast.success("Trip created!");
       reset();
+      setDestination(null);
+      setQuery("");
       onClose();
       router.push(`/trips/${trip._id}`);
     } catch {
@@ -162,19 +141,11 @@ export function CreateTripModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           <div className="space-y-1">
             <Label>Trip name</Label>
-            <Input {...register("title")} placeholder="e.g Tokyo Adventure" />
+            <Input {...register("title")} placeholder="e.g. Tokyo Adventure" />
             {errors.title && (
               <p className="text-sm text-red-500">{errors.title.message}</p>
             )}
           </div>
-
-          {/* <div className="space-y-1">
-            <Label>Destination</Label>
-            <Input
-              ref={autocompleteRef}
-              placeholder="Search citites..."
-            ></Input>
-          </div> */}
 
           <div className="space-y-1 relative">
             <Label>Destination</Label>

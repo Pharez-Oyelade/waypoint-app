@@ -13,12 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-const registerSchema = z.object({
+const loginSchema = z.object({
   email: z.email("Enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-type RegisterForm = z.infer<typeof registerSchema>;
+type LoginForm = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
   const router = useRouter();
@@ -28,9 +28,9 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) });
+  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = async (data: RegisterForm) => {
+  const onSubmit = async (data: LoginForm) => {
     try {
       const res = await api.post("/auth/login", data);
       setUser(res.data.user);
@@ -49,7 +49,7 @@ const LoginPage = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="sapce-y-1">
+        <div className="space-y-1">
           <Label htmlFor="email">Email</Label>
           <Input
             type="email"
@@ -62,7 +62,7 @@ const LoginPage = () => {
           )}
         </div>
 
-        <div className="sapce-y-1">
+        <div className="space-y-1">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"

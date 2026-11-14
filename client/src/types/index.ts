@@ -23,7 +23,7 @@ export interface Trip {
   tripType: "solo" | "couple" | "group" | "family";
   status: "planning" | "upcoming" | "ongoing" | "completed" | "archived";
   owner: User;
-  members: { user: User; role: string; status: string }[];
+  members: { userId: User; role: string; status: string }[];
   budget: { total: number; currency: string };
   createdAt: string;
 }
@@ -42,7 +42,7 @@ export interface Activity {
   currency: string;
   status: string;
   aiGenerated: boolean;
-  conflicts: { type: string; message: string; severity: string }[];
+  conflicts?: { type: string; message: string; severity: string }[];
   order: number;
   dayId: string;
   tripId: string;

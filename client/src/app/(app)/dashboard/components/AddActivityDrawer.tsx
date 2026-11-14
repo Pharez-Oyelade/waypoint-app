@@ -84,11 +84,16 @@ export function AddActivityDrawer({ open, onClose, dayId, tripId }: Props) {
     }
 
     debounceRef.current = setTimeout(async () => {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&addressdetails=1&limit=5&featuretype=city`,
-      );
-      const data = await res.json();
-      setSuggestions(data);
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&addressdetails=1&limit=5&featuretype=city`,
+        );
+        const data = await res.json();
+        setSuggestions(data);
+      } catch {
+        // Silently fail — user can retry
+        setSuggestions([]);
+      }
     }, 400);
   };
 
@@ -113,16 +118,14 @@ export function AddActivityDrawer({ open, onClose, dayId, tripId }: Props) {
     }
 
     try {
-      const activity = await addActivity.mutateAsync({
-        dayId,
-        ...data,
-        location,
-      });
+      await addActivity.mutateAsync({ dayId, data: { ...data, location } });
       toast.success("Activity Added!");
       reset();
+      setLocation(null);
+      setQuery("");
       onClose();
     } catch {
-      toast.error("Failed to create trip");
+      toast.error("Failed to add activity");
     }
   };
 
@@ -136,7 +139,7 @@ export function AddActivityDrawer({ open, onClose, dayId, tripId }: Props) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           <div className="space-y-1">
             <Label>Activity name</Label>
-            <Input {...register("name")} placeholder="e.g Shooping Spree" />
+            <Input {...register("name")} placeholder="e.g. Shopping Spree" />
             {errors.name && (
               <p className="text-sm text-red-500">{errors.name.message}</p>
             )}

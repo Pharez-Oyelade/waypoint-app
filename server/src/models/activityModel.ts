@@ -11,7 +11,7 @@ const ConflictSchema = new Schema(
 
 const ActivitySchema = new Schema(
   {
-    tripId: { type: Schema.Types.ObjectId, ref: "Trip", requiredf: true },
+    tripId: { type: Schema.Types.ObjectId, ref: "Trip", required: true },
     dayId: { type: Schema.Types.ObjectId, ref: "Day", required: true },
     name: { type: String, required: true, trim: true },
     description: String,
@@ -19,7 +19,7 @@ const ActivitySchema = new Schema(
       name: String,
       address: String,
       placeId: String,
-      coordinated: { lat: Number, lng: Number },
+      coordinates: { lat: Number, lng: Number },
     },
     startTime: String, //"HH:mm"
     endTime: String,

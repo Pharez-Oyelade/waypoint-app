@@ -9,7 +9,6 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import { initPassport } from "./config/passport";
 
-import dns from "node:dns";
 import authRouter from "./routes/auth.routes";
 import tripRouter from "./routes/trips.routes";
 import activityRouter from "./routes/activities.routes";
@@ -19,10 +18,8 @@ dotenv.config();
 const app = express();
 const httpServer = http.createServer(app);
 
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
-
 // Socket.IO
-// TODO: expand
+// TODO: expand — add authentication on handshake and event handlers
 export const io = new Server(httpServer, {
   cors: { origin: process.env.CLIENT_URL, credentials: true },
 });
@@ -36,7 +33,8 @@ app.use(
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   }),
 );
-app.use(morgan("dev"));
+// Use 'combined' format in production for richer logs
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,25 +45,40 @@ initPassport();
 // ================= Routes ====================
 app.use("/api/auth", authRouter);
 app.use("/api/trips", tripRouter);
-app.use("/api", activityRouter);
-app.use("/api/activities", activityRouter);
+app.use("/api", activityRouter); // activity routes are prefixed with /trips/:tripId/...
 
-// ============ HEalth check ====================
+// ============ Health check ====================
 app.get("/health", (_, res) => res.json({ status: "ok" }));
 
-// ================= Error Handling ==================
-app.use((err: any, req: any, res: any, next: any) => {
-  const status = err.statusCode || 500;
-  res.status(status).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-  });
-});
+// ================= Global Error Handler ==================
+app.use(
+  (
+    err: Error & { statusCode?: number },
+    req: express.Request,
+    res: express.Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _next: express.NextFunction,
+  ) => {
+    const status = err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+
+    if (process.env.NODE_ENV !== "production") {
+      console.error(`[${req.method}] ${req.path} — ${status}: ${message}`);
+    }
+
+    res.status(status).json({ success: false, message });
+  },
+);
 
 // ================= Start ===================
 const PORT = process.env.PORT || 5000;
-connectDB().then(() => {
-  httpServer.listen(PORT, () =>
-    console.log(`Server running on http://localhost:${PORT}`),
-  );
-});
+connectDB()
+  .then(() => {
+    httpServer.listen(PORT, () =>
+      console.log(`Server running on http://localhost:${PORT}`),
+    );
+  })
+  .catch((err) => {
+    console.error("Failed to connect to database:", err);
+    process.exit(1);
+  });

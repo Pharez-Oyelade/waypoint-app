@@ -8,10 +8,10 @@ import { Trip } from "@/types";
 
 const STATUS_COLORS: Record<string, string> = {
   planning: "bg-gray-100 text-gray-700",
-  upcoming: "bg-blue-100 tex-blue-700",
+  upcoming: "bg-blue-100 text-blue-700",
   ongoing: "bg-green-100 text-green-700",
-  completed: "bg-purple-100 text-prrple-700",
-  archived: "bg-red-100 text-red-100",
+  completed: "bg-purple-100 text-purple-700",
+  archived: "bg-red-100 text-red-700",
 };
 
 export function TripCard({ trip }: { trip: Trip }) {
@@ -36,7 +36,7 @@ export function TripCard({ trip }: { trip: Trip }) {
         )}
         <div className="absolute top-3 right-3">
           <span
-            className={`text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_COLORS}`}
+            className={`text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_COLORS[trip.status] ?? "bg-gray-100 text-gray-700"}`}
           >
             {trip.status}
           </span>

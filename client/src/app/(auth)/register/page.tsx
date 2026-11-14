@@ -50,7 +50,7 @@ const RegisterPage = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="sapce-y-1">
+        <div className="space-y-1">
           <Label htmlFor="name">Full name</Label>
           <Input id="name" {...register("name")} placeholder="Your name" />
           {errors.name && (
@@ -58,7 +58,7 @@ const RegisterPage = () => {
           )}
         </div>
 
-        <div className="sapce-y-1">
+        <div className="space-y-1">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -71,7 +71,7 @@ const RegisterPage = () => {
           )}
         </div>
 
-        <div className="sapce-y-1">
+        <div className="space-y-1">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"

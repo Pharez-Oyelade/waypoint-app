@@ -15,10 +15,8 @@ export function useTrips() {
 export function useCreateTrip() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: any) => {
-      console.log("sending:", data);
-      return api.post("/trips", data).then((r) => r.data.trip);
-    },
+    mutationFn: (data: Record<string, unknown>) =>
+      api.post("/trips", data).then((r) => r.data.trip),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["trips"] }),
   });
 }
