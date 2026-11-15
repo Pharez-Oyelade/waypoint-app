@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit, Work_Sans } from "next/font/google";
+import { Outfit, Work_Sans, Geist } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { cn } from "@/lib/utils";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
-const workSans = Work_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "Waypoint –— Travel Companion",
@@ -21,7 +22,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${outfit.variable} ${workSans.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", outfit.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col font-sans">
         <Providers>
