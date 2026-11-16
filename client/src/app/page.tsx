@@ -37,6 +37,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Destinations from "@/components/landing/Destinations";
+import TheApp from "@/components/landing/TheApp";
 
 export default function LandingPage() {
   // const { scrollYProgress } = useScroll();
@@ -117,6 +118,7 @@ export default function LandingPage() {
       <Features />
       <HowItWorks />
       <Destinations />
+      <TheApp />
 
       {/* Social Proof */}
       <section className="py-24 bg-primary/5 dark:bg-primary/10">
