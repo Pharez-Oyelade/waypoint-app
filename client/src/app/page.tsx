@@ -123,43 +123,45 @@ export default function LandingPage() {
       {/* Social Proof */}
       <section className="py-24 bg-primary/5 dark:bg-primary/10">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="font-heading font-black text-4xl mb-16 text-slate-900 dark:text-white">
-            Loved by 100,000+ travelers
+          <h2 className="font-heading max-w-[500px] mx-auto font-bold text-4xl md:text-5xl mb-16 text-slate-900 dark:text-white">
+            Loved by travelers everywhere
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                name: "Sarah Jenkins",
-                role: "Solo Backpacker",
+                name: "Amara O",
+                role: "Lagos to Cape Town",
                 quote:
                   "Waypoint completely changed how I travel. I don't have to worry about missing the train or losing my hotel address anymore. Everything is just beautifully organized.",
                 img: "https://i.pravatar.cc/150?u=sarah",
               },
               {
-                name: "David Miller",
-                role: "Family Vacationer",
+                name: "David Ayodele",
+                role: "Family Trip to Dubai",
                 quote:
                   "Planning a trip for a family of 5 used to be a nightmare. Now it's actually fun. The AI suggestions found incredible kid-friendly spots we never would have discovered.",
-                img: "https://i.pravatar.cc/150?u=david",
+
+                img: "https://i.pravatar.cc/150?u=elena",
               },
               {
-                name: "Elena Torres",
-                role: "Digital Nomad",
+                name: "Sofia Miller",
+                role: "Honeymoon in Santorini",
                 quote:
-                  "The offline maps feature and collaborative planning saved me and my friends during our remote trip through Vietnam. Absolute must-have app on my phone.",
-                img: "https://i.pravatar.cc/150?u=elena",
+                  "Voting on plans took minutes. Our honeymoon route came together in one evening.",
+
+                img: "https://i.pravatar.cc/150?u=david",
               },
             ].map((testimonial, i) => (
               <div
                 key={i}
-                className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-border text-left relative overflow-hidden group hover:border-primary/50 transition-colors"
+                className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-border text-left relative overflow-hidden group hover:border-primary/50 transition-colors flex flex-col justify-between"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/10 to-transparent rounded-bl-full -z-10 group-hover:scale-110 transition-transform" />
                 <div className="flex items-center gap-1 mb-6">
                   {[...Array(5)].map((_, j) => (
                     <Star
                       key={j}
-                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                      className="w-4 h-4 fill-brand-accent text-brand-accent"
                     />
                   ))}
                 </div>
@@ -188,7 +190,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer CTA & Footer */}
-      <footer className="bg-slate-900 text-white mt-12 overflow-hidden relative border-t-8 border-primary">
+      <footer className="bg-slate-900 text-white overflow-hidden relative border-t-8 border-primary">
         {/* Playful background shapes for the footer */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -205,18 +207,22 @@ export default function LandingPage() {
           </svg>
         </div>
         <div className="max-w-7xl mx-auto px-6 pt-24 pb-12 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20 bg-white/5 backdrop-blur-lg rounded-3xl p-12 border border-white/10 shadow-2xl">
-            <h2 className="font-heading font-black text-4xl md:text-5xl mb-6 text-white">
+          <div className="text-center max-w-[1200px] mx-auto mb-20 bg-linear-to-br from-brand to-[#5b8cff] backdrop-blur-lg rounded-[56px] px-[64px] py-[88px] border border-white/10 shadow-2xl">
+            <h2 className="font-heading font-black text-4xl md:text-[60px] mb-6 max-w-[760px] mx-auto text-white">
               Ready for your next adventure?
             </h2>
-            <p className="text-xl text-slate-300 mb-10 leading-relaxed">
-              Join thousands of travelers who have upgraded their travel
-              experience. Download today and start planning your perfect trip.
+            <p className="text-xl max-w-[560px] mx-auto text-slate-300 mb-10 leading-relaxed">
+              Create a trip in under a minute and bring your crew along.
             </p>
-            <button className="bg-accent text-white px-10 py-5 rounded-full text-xl font-bold hover:scale-105 hover:-translate-y-1 transition-all shadow-[0_0_40px_rgba(244,63,94,0.4)] cursor-pointer flex items-center justify-center gap-3 mx-auto">
-              <span>Get Waypoint Free</span>
-              <ArrowRight className="w-6 h-6" />
-            </button>
+            <div className="flex justify-center gap-3 items-center w-full flex-wrap">
+              <button className="font-bold bg-white text-black px-[28px] py-[16px] rounded-full hover:bg-brand hover:text-white transition-all active:scale-95">
+                Start planning free
+              </button>
+
+              <button className="font-bold bg-transparent border border-white text-white px-[28px] py-[16px] rounded-full hover:bg-white hover:text-black transition-all active:scale-95">
+                Download the app
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pt-12 border-t border-slate-800">
