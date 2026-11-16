@@ -52,10 +52,7 @@ export default function LandingPage() {
 
   return (
     <div className=" bg-background text-foreground overflow-hidden font-sans selection:bg-accent selection:text-white">
-      {/* Navbar */}
       <Navbar />
-
-      {/* Hero Section */}
       <Hero
         destination={destination}
         setDestination={setDestination}
@@ -119,16 +116,19 @@ export default function LandingPage() {
       <Features />
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 bg-white dark:bg-slate-900">
+      <section
+        id="how-it-works"
+        className="py-24 bg-slate-50 dark:bg-slate-900"
+      >
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-heading font-black text-4xl mb-4 text-slate-900 dark:text-white">
-              From daydream to boarding pass
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <h2 className="font-heading font-black text-4xl sm:text-5xl mb-4 text-slate-900 dark:text-white leading-[56px] tracking-tight">
+              Three steps to a trip everyone is excited about
             </h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+            {/* <p className="text-lg text-slate-500 max-w-2xl mx-auto">
               Three simple steps to unlock the perfect getaway without the
               planning headache.
-            </p>
+            </p> */}
           </div>
 
           <div className="grid md:grid-cols-3 gap-12 relative">
@@ -138,15 +138,17 @@ export default function LandingPage() {
             {[
               {
                 icon: <MapPin />,
-                title: "1. Pick your vibe",
-                desc: "Beach bum, city explorer, or mountain trekker? Tell us what you love.",
+                image: "/images/start-trip.jpg",
+                title: "Pick your vibe & invite friends",
+                desc: "Beach bum, city explorer, or mountain trekker? Tell us what you love. Everyone joins in seconds.",
                 color: "text-blue-500",
                 bg: "bg-blue-100 dark:bg-blue-900/30",
                 borderColor: "border-blue-200 dark:border-blue-800",
               },
               {
                 icon: <CalendarIcon />,
-                title: "2. Magic happens",
+                image: "/images/ideas-vote.jpg",
+                title: "Add ideas, vote and watch magic happen",
                 desc: "Our AI crafts an optimized, flexible itinerary with hidden gems included.",
                 color: "text-rose-500",
                 bg: "bg-rose-100 dark:bg-rose-900/30",
@@ -154,8 +156,9 @@ export default function LandingPage() {
               },
               {
                 icon: <Navigation />,
-                title: "3. Go explore",
-                desc: "Follow your interactive map on the go. Offline support included.",
+                image: "/images/trip-map.jpg",
+                title: "Lock the plan and go explore",
+                desc: "One itinerary, maps, tickets. Follow your interactive map on the go. Offline support included.",
                 color: "text-emerald-500",
                 bg: "bg-emerald-100 dark:bg-emerald-900/30",
                 borderColor: "border-emerald-200 dark:border-emerald-800",
@@ -167,27 +170,29 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ delay: i * 0.2 }}
-                className={`bg-background border-2 ${step.borderColor} p-8 rounded-3xl text-center shadow-lg relative group hover:-translate-y-2 transition-transform duration-300`}
+                className={`bg-background p-[16px] rounded-[32px] shadow-lg relative group hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-center items-start gap-[20px]`}
               >
-                <div
-                  className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-6 ${step.bg} ${step.color} group-hover:scale-110 group-hover:rotate-6 transition-all`}
-                >
-                  {React.cloneElement(
-                    step.icon as React.ReactElement<{ className?: string }>,
-                    { className: "w-8 h-8" },
-                  )}
+                <div className={``}>
+                  <Image
+                    src={step.image}
+                    width={352}
+                    height={200}
+                    alt=""
+                    className="rounded-[24px]"
+                  />
                 </div>
-                <h3 className="font-bold text-2xl mb-3 text-slate-800 dark:text-slate-100">
-                  {step.title}
-                </h3>
-                <p className="text-slate-500">{step.desc}</p>
+                <div className="space-y-[10px]">
+                  <span className="text-sm text-brand-accent text-bold">
+                    STEP {i + 1}
+                  </span>
+                  <h3 className="text-[20px] font-bold">{step.title}</h3>
+                  <p className="text-slate-500">{step.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
-
 
       {/* Destinations Inspiration */}
       <section id="destinations" className="py-24 bg-white dark:bg-slate-900">
