@@ -18,6 +18,8 @@ import {
   Minus,
   Plus,
   Check,
+  Bot,
+  Luggage,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -25,6 +27,7 @@ import type { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/ui/Navbar";
 import Hero from "@/components/landing/Hero";
+import Features from "@/components/landing/Features";
 
 import {
   Popover,
@@ -32,37 +35,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-
-const destinations = [
-  {
-    label: "Tokyo, Japan",
-    value: "tokyo",
-  },
-  {
-    label: "Paris, France",
-    value: "paris",
-  },
-  {
-    label: "New York, USA",
-    value: "new-york",
-  },
-  {
-    label: "Sydney, Australia",
-    value: "sydney",
-  },
-  {
-    label: "Rio de Janeiro, Brazil",
-    value: "rio-de-janeiro",
-  },
-  {
-    label: "Rome, Italy",
-    value: "rome",
-  },
-  {
-    label: "Bali, Indonesia",
-    value: "bali",
-  },
-];
 
 export default function LandingPage() {
   // const { scrollYProgress } = useScroll();
@@ -105,6 +77,46 @@ export default function LandingPage() {
         datePickerOpen={datePickerOpen}
         setDatePickerOpen={setDatePickerOpen}
       />
+
+      {/* value strip */}
+      <section className="bg-slate-50 dark:bg-slate-900">
+        <div className="max-w-7xl mx-auto px-12 py-13 grid grid-cols-2 md:grid-cols-4 gap-10 sm:gap-4 items-center">
+          <div className="flex flex-col items-start sm:items-center">
+            <MapPin className="w-10 h-10 text-brand" />
+            <h3 className="text-2xl font-bold">Discover</h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Find destinations everyone will love
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start sm:items-center">
+            <Users className="w-10 h-10 text-brand" />
+            <h3 className="text-2xl font-bold">Decide</h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Make group descisions together
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start sm:items-center">
+            <Bot className="w-10 h-10 text-brand" />
+            <h3 className="text-2xl font-bold">Plan</h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Get AI-powered travel suggestions
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start sm:items-center">
+            <Luggage className="w-10 h-10 text-brand" />
+            <h3 className="text-2xl font-bold">Travel</h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Keep everything in one itinerary
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <Features />
 
       {/* How It Works */}
       <section id="how-it-works" className="py-24 bg-white dark:bg-slate-900">
@@ -175,114 +187,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Core Features */}
-      <section
-        id="features"
-        className="py-24 relative overflow-hidden bg-slate-50 dark:bg-slate-900/50"
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="font-heading font-black text-4xl md:text-5xl mb-6 text-slate-900 dark:text-white">
-                Your entire trip in one pocket
-              </h2>
-              <p className="text-lg text-slate-500 mb-8 leading-relaxed">
-                We've combined everything you need into a single, beautiful app.
-                No more juggling between maps, booking emails, and notes.
-              </p>
 
-              <ul className="space-y-6">
-                {[
-                  {
-                    title: "Smart Maps",
-                    desc: "We automatically route your path to minimize transit time.",
-                  },
-                  {
-                    title: "Live Updates",
-                    desc: "Get notified of flight delays, weather shifts, or reservation changes instantly.",
-                  },
-                  {
-                    title: "Collaborative Planning",
-                    desc: "Invite friends to vote on activities, split costs, and share photos.",
-                  },
-                ].map((feature, i) => (
-                  <li key={i} className="flex gap-4">
-                    <div className="mt-1 w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center shrink-0 shadow-sm border border-accent/20">
-                      <Star className="w-4 h-4 text-accent fill-accent" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-xl mb-1 text-slate-800 dark:text-slate-200">
-                        {feature.title}
-                      </h4>
-                      <p className="text-slate-500">{feature.desc}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 to-accent/30 rounded-full blur-3xl -z-10 animate-pulse" />
-              <div className="bg-white dark:bg-slate-800 border-4 border-white dark:border-slate-700 rounded-[3rem] shadow-2xl p-4 overflow-hidden aspect-[4/5] transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                <div className="w-full h-full bg-slate-100 dark:bg-slate-900 rounded-2xl relative overflow-hidden flex flex-col">
-                  {/* Fake App UI */}
-                  <div className="h-14 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-border flex items-center justify-center shadow-sm z-10">
-                    <div className="font-bold text-lg text-slate-800 dark:text-white">
-                      Tokyo Itinerary
-                    </div>
-                  </div>
-                  <div className="p-4 space-y-4 flex-1 overflow-hidden relative">
-                    {/* Fake Map Background */}
-                    <div className="absolute inset-0 opacity-20 pointer-events-none">
-                      <svg
-                        width="100%"
-                        height="100%"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <defs>
-                          <pattern
-                            id="grid"
-                            width="20"
-                            height="20"
-                            patternUnits="userSpaceOnUse"
-                          >
-                            <path
-                              d="M 20 0 L 0 0 0 20"
-                              fill="none"
-                              stroke="currentColor"
-                              className="text-primary"
-                              strokeWidth="0.5"
-                            />
-                          </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)" />
-                      </svg>
-                    </div>
-
-                    <div className="h-28 bg-white dark:bg-slate-800 rounded-2xl shadow-md p-4 flex gap-4 relative z-10 hover:scale-[1.02] transition-transform border border-border/50">
-                      <div className="w-20 h-full bg-blue-100 dark:bg-blue-900/50 rounded-xl flex items-center justify-center text-blue-500">
-                        <MapPin className="w-8 h-8" />
-                      </div>
-                      <div className="flex-1 space-y-3 py-1">
-                        <div className="h-4 bg-slate-200 dark:bg-slate-700 w-3/4 rounded-full" />
-                        <div className="h-3 bg-slate-100 dark:bg-slate-600 w-1/2 rounded-full" />
-                      </div>
-                    </div>
-                    <div className="h-28 bg-white dark:bg-slate-800 rounded-2xl shadow-md p-4 flex gap-4 relative z-10 hover:scale-[1.02] transition-transform border border-border/50">
-                      <div className="w-20 h-full bg-rose-100 dark:bg-rose-900/50 rounded-xl flex items-center justify-center text-rose-500">
-                        <Navigation className="w-8 h-8" />
-                      </div>
-                      <div className="flex-1 space-y-3 py-1">
-                        <div className="h-4 bg-slate-200 dark:bg-slate-700 w-5/6 rounded-full" />
-                        <div className="h-3 bg-slate-100 dark:bg-slate-600 w-1/3 rounded-full" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Destinations Inspiration */}
       <section id="destinations" className="py-24 bg-white dark:bg-slate-900">
