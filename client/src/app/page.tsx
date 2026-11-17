@@ -1,40 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
 import {
   MapPin,
-  Navigation,
-  Calendar as CalendarIcon,
-  Globe2,
-  Compass,
-  Map,
   Star,
-  ArrowRight,
-  MapPinned,
   Users,
-  Banknote,
-  Minus,
-  Plus,
-  Check,
   Bot,
   Luggage,
+  Globe2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import type { DateRange } from "react-day-picker";
-import { Button } from "@/components/ui/button";
 import Navbar from "@/components/ui/Navbar";
 import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Destinations from "@/components/landing/Destinations";
 import TheApp from "@/components/landing/TheApp";
@@ -93,7 +71,7 @@ export default function LandingPage() {
             <Users className="w-10 h-10 text-brand" />
             <h3 className="text-2xl font-bold">Decide</h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Make group descisions together
+              Make group decisions together
             </p>
           </div>
 

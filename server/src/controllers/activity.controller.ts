@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { AppError } from "../utils/AppError";
 import Activity from "../models/activityModel";
 import Day from "../models/dayModel";
+import { pick } from "../utils/pick";
 
 // Allowed fields for create/update — prevents mass assignment attacks
 const ALLOWED_ACTIVITY_FIELDS = [
@@ -19,13 +20,6 @@ const ALLOWED_ACTIVITY_FIELDS = [
   "status",
   "notes",
 ] as const;
-
-function pick<T extends object>(obj: T, keys: readonly string[]): Partial<T> {
-  return keys.reduce((acc, key) => {
-    if (key in obj) acc[key as keyof T] = obj[key as keyof T];
-    return acc;
-  }, {} as Partial<T>);
-}
 
 // ADD ACTIVITY — requires requireTripAccess middleware on route
 export const addActivity = asyncHandler(
@@ -116,12 +110,18 @@ export const reorderActivities = asyncHandler(
     }
 
     await Day.findByIdAndUpdate(dayId, { activities: activityIds });
-    // Also update order field on each activity for fallback sorting
-    await Promise.all(
-      (activityIds as string[]).map((id, index) =>
-        Activity.findByIdAndUpdate(id, { order: index }),
-      ),
-    );
+    
+    // Bulk write to update order field efficiently
+    if (activityIds.length > 0) {
+      const bulkOps = (activityIds as string[]).map((id, index) => ({
+        updateOne: {
+          filter: { _id: id, tripId },
+          update: { $set: { order: index } },
+        },
+      }));
+      await Activity.bulkWrite(bulkOps);
+    }
+
     res.json({ success: true });
   },
 );
@@ -132,9 +132,9 @@ export const moveActivity = asyncHandler(
     const tripId = req.params.tripId as string;
     const { activityId, fromDayId, toDayId, newOrder } = req.body;
 
-    if (!activityId || !fromDayId || !toDayId || !newOrder) {
+    if (!activityId || !fromDayId || !toDayId || newOrder == null || !Array.isArray(newOrder)) {
       throw new AppError(
-        "activityId, fromDayId, toDayId, and newOrder are required",
+        "activityId, fromDayId, toDayId, and newOrder array are required",
         400,
       );
     }
@@ -164,6 +164,17 @@ export const moveActivity = asyncHandler(
 
     // Set new ordered array on destination day
     await Day.findByIdAndUpdate(toDayId, { activities: newOrder });
+
+    // Update orders in destination day
+    if (newOrder.length > 0) {
+      const bulkOps = (newOrder as string[]).map((id, index) => ({
+        updateOne: {
+          filter: { _id: id, tripId },
+          update: { $set: { order: index } },
+        },
+      }));
+      await Activity.bulkWrite(bulkOps);
+    }
 
     res.json({ success: true });
   },

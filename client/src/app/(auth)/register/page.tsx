@@ -34,9 +34,14 @@ const RegisterPage = () => {
   const onSubmit = async (data: RegisterForm) => {
     try {
       const res = await api.post("/auth/register", data);
-      setUser(res.data.user);
-      toast.success("Welcome to Waypoint!");
-      router.push("/dashboard");
+      if (res.data.user) {
+        setUser(res.data.user);
+        toast.success("Welcome to Waypoint!");
+        router.push("/dashboard");
+      } else {
+        toast.success(res.data.message || "Please check your email to verify your account");
+        router.push("/login");
+      }
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Registration failed");
     }

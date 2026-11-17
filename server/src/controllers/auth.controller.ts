@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -6,12 +7,12 @@ import { sendTokenCookie } from "../middleware/auth";
 import { asyncHandler } from "../utils/asyncHandler";
 
 // Register
-export const registerUser = asyncHandler(async (req: any, res: any) => {
+export const registerUser = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   const existing = await User.findOne({ email });
   if (existing)
-    return res.status(409).json({ message: "Email already in use" });
+    return res.status(409).json({ success: false, message: "Email already in use" });
 
   const passwordHash = await bcrypt.hash(password, 10);
   const verificationToken = crypto.randomBytes(32).toString("hex");
@@ -24,7 +25,6 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
     provider: "local",
   });
 
-  // TODO: send verification email with token
   // auto-verify in dev
   if (process.env.NODE_ENV === "development") {
     user.emailVerified = true;
@@ -37,25 +37,23 @@ export const registerUser = asyncHandler(async (req: any, res: any) => {
 });
 
 // Login
-export const loginUser = (req: any, res: any, next: any) => {
+export const loginUser = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("local", (err: any, user: any, info: any) => {
     if (err) return next(err);
-    if (!user) return res.status(401).json({ message: info?.message });
+    if (!user) return res.status(401).json({ success: false, message: info?.message || "Invalid credentials" });
 
     sendTokenCookie(res, user.id);
     res.json({ success: true, user });
   })(req, res, next);
 };
 
-// logout
-export const logoutUser = (_: any, res: any) => {
+// Logout
+export const logoutUser = (_: Request, res: Response) => {
   res.clearCookie("jwt");
   res.json({ success: true });
 };
 
-// me
-export const getMe = asyncHandler(async (req: any, res: any) => {
-  const token = req.cookies?.jwt;
-  if (!token) return res.json({ user: null });
-  res.json({ user: req.user });
+// Me - route is protected by `protect` middleware
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  res.json({ success: true, user: req.user });
 });

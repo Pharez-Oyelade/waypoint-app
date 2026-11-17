@@ -2,8 +2,10 @@ import { Response, Request } from "express";
 import { differenceInCalendarDays, addDays, startOfDay } from "date-fns";
 import Trip from "../models/tripModel";
 import Day from "../models/dayModel";
+import Activity from "../models/activityModel";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AppError } from "../utils/AppError";
+import { pick } from "../utils/pick";
 
 // Allowed fields for create/update — prevents mass assignment attacks
 const ALLOWED_CREATE_FIELDS = [
@@ -29,14 +31,7 @@ const ALLOWED_UPDATE_FIELDS = [
   "status",
 ] as const;
 
-function pick<T extends object>(obj: T, keys: readonly string[]): Partial<T> {
-  return keys.reduce((acc, key) => {
-    if (key in obj) acc[key as keyof T] = obj[key as keyof T];
-    return acc;
-  }, {} as Partial<T>);
-}
-
-// create day documents for every day in the trip
+// Create day documents for every day in the trip
 async function createTripDays(tripId: string, startDate: Date, endDate: Date) {
   if (endDate <= startDate) {
     throw new AppError("End date must be after start date", 400);
@@ -50,7 +45,7 @@ async function createTripDays(tripId: string, startDate: Date, endDate: Date) {
   await Day.insertMany(days);
 }
 
-// fetch all trips
+// Fetch all trips for user
 export const getTrips = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user!._id;
   const trips = await Trip.find({
@@ -62,7 +57,7 @@ export const getTrips = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, trips });
 });
 
-// create trip
+// Create trip
 export const createTrip = asyncHandler(async (req: Request, res: Response) => {
   const safeBody = pick(req.body, ALLOWED_CREATE_FIELDS);
   const trip = await Trip.create({
@@ -80,7 +75,7 @@ export const createTrip = asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json({ success: true, trip });
 });
 
-// get trip by ID
+// Get trip by ID
 export const getTripById = asyncHandler(async (req: Request, res: Response) => {
   const trip = await Trip.findById(req.params.id)
     .populate("owner", "name avatar email")
@@ -88,12 +83,14 @@ export const getTripById = asyncHandler(async (req: Request, res: Response) => {
 
   if (!trip) throw new AppError("Trip not found", 404);
 
-  // check if user has access
+  // Check if user has access
   const isMember =
     trip.owner.equals(req.user!._id) ||
     trip.members.some(
       (m: any) =>
-        m.userId._id.equals(req.user!._id) && m.status === "active",
+        m.userId &&
+        (m.userId._id ? m.userId._id.equals(req.user!._id) : m.userId.equals(req.user!._id)) &&
+        m.status === "active",
     );
 
   if (!isMember) throw new AppError("Access denied", 403);
@@ -110,7 +107,7 @@ export const getTripById = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true, trip, days });
 });
 
-// updateTrip
+// Update trip
 export const updateTrip = asyncHandler(async (req: Request, res: Response) => {
   const trip = await Trip.findById(req.params.id);
   if (!trip) throw new AppError("Trip not found", 404);
@@ -118,12 +115,28 @@ export const updateTrip = asyncHandler(async (req: Request, res: Response) => {
     throw new AppError("Only the owner can edit trip", 403);
 
   const safeBody = pick(req.body, ALLOWED_UPDATE_FIELDS);
+
+  // BUG-8: If dates changed, regenerate days
+  const dateChanged =
+    (safeBody.startDate && new Date(safeBody.startDate).getTime() !== new Date(trip.startDate).getTime()) ||
+    (safeBody.endDate && new Date(safeBody.endDate).getTime() !== new Date(trip.endDate).getTime());
+
   Object.assign(trip, safeBody);
   await trip.save();
+
+  if (dateChanged) {
+    const newStart = new Date(trip.startDate);
+    const newEnd = new Date(trip.endDate);
+    // Delete existing activities and days for this trip
+    await Activity.deleteMany({ tripId: trip._id });
+    await Day.deleteMany({ tripId: trip._id });
+    await createTripDays(trip.id, newStart, newEnd);
+  }
+
   res.json({ success: true, trip });
 });
 
-// delete Trip
+// Delete trip (soft delete trip, cascade cleanup days and activities)
 export const deleteTrip = asyncHandler(async (req: Request, res: Response) => {
   const trip = await Trip.findById(req.params.id);
   if (!trip) throw new AppError("Trip not found", 404);
@@ -133,6 +146,10 @@ export const deleteTrip = asyncHandler(async (req: Request, res: Response) => {
   trip.isDeleted = true;
   trip.deletedAt = new Date();
   await trip.save();
+
+  // Cascade delete days and activities
+  await Activity.deleteMany({ tripId: trip._id });
+  await Day.deleteMany({ tripId: trip._id });
 
   res.json({ success: true, message: "Trip deleted" });
 });
@@ -148,7 +165,9 @@ export const duplicateTrip = asyncHandler(
       source.owner.equals(req.user!._id) ||
       source.members.some(
         (m: any) =>
-          m.userId.equals(req.user!._id) && m.status === "active",
+          m.userId &&
+          (m.userId._id ? m.userId._id.equals(req.user!._id) : m.userId.equals(req.user!._id)) &&
+          m.status === "active",
       );
     if (!hasAccess) throw new AppError("Access denied", 403);
 

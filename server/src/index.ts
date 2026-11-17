@@ -1,3 +1,4 @@
+/// <reference path="./types/express.d.ts" />
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
@@ -12,6 +13,10 @@ import { initPassport } from "./config/passport";
 import authRouter from "./routes/auth.routes";
 import tripRouter from "./routes/trips.routes";
 import activityRouter from "./routes/activities.routes";
+
+import dns from "dns";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 

@@ -1,6 +1,13 @@
 import { Router } from "express";
 import { protect } from "../middleware/auth";
 import { requireTripAccess } from "../middleware/tripAccess";
+import { validate } from "../middleware/validate";
+import {
+  createActivitySchema,
+  updateActivitySchema,
+  reorderActivitiesSchema,
+  moveActivitySchema,
+} from "../schemas/activity.schema";
 import {
   addActivity,
   deleteActivity,
@@ -18,16 +25,19 @@ activityRouter.use(protect);
 activityRouter.post(
   "/trips/:tripId/days/:dayId/activities",
   requireTripAccess,
+  validate(createActivitySchema),
   addActivity,
 );
 activityRouter.patch(
   "/trips/:tripId/days/:dayId/reorder",
   requireTripAccess,
+  validate(reorderActivitiesSchema),
   reorderActivities,
 );
 activityRouter.patch(
   "/trips/:tripId/activities/move",
   requireTripAccess,
+  validate(moveActivitySchema),
   moveActivity,
 );
 
@@ -35,6 +45,7 @@ activityRouter.patch(
 activityRouter.patch(
   "/trips/:tripId/activities/:id",
   requireTripAccess,
+  validate(updateActivitySchema),
   updateActivity,
 );
 activityRouter.delete(
